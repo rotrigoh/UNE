@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import QRCode from 'qrcode';
 import { AppleWalletBadge, GoogleWalletBadge, UFPECrest, UNELogo, UBESLogo, ANPGLogo } from './Logos';
-import { Eye, EyeOff, ShieldCheck, Share2, Download, RefreshCw, Award, CheckCircle2, Rotate3d, ExternalLink } from 'lucide-react';
+import { Eye, EyeOff, ShieldCheck, Download, RefreshCw, CheckCircle2, Rotate3d } from 'lucide-react';
 
 export default function DigitalCard({ student, onFlipTo3D, onValidateModal }) {
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [showFullCpf, setShowFullCpf] = useState(false);
-  const [liveTimestamp, setLiveTimestamp] = useState('');
   const [isHologramActive, setIsHologramActive] = useState(false);
   const [walletFeedback, setWalletFeedback] = useState(null);
 
@@ -40,19 +39,6 @@ export default function DigitalCard({ student, onFlipTo3D, onValidateModal }) {
     });
   }, [student]);
 
-  // Real-time security clock update (proves active live session to security checkers)
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const dateStr = now.toLocaleDateString('pt-BR');
-      const timeStr = now.toLocaleTimeString('pt-BR');
-      setLiveTimestamp(`${dateStr} - ${timeStr}`);
-    };
-    updateTime();
-    const timer = setInterval(updateTime, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
   const maskedCpf = student.cpf.replace(/(\d{3})\.(\d{3})\.(\d{3})-(\d{2})/, '***.$2.***-$4');
 
   const handleAppleWallet = () => {
@@ -67,23 +53,6 @@ export default function DigitalCard({ student, onFlipTo3D, onValidateModal }) {
 
   const handlePrint = () => {
     window.print();
-  };
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `DNE UNE - ${student.nome}`,
-          text: `Documento Nacional do Estudante UNE - Matrícula ${student.matricula} - CIE: ${student.codigoUso}`,
-          url: window.location.href,
-        });
-      } catch (e) {
-        console.log('Share canceled');
-      }
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link da Carteira Digital copiado para a área de transferência!');
-    }
   };
 
   return (
@@ -116,19 +85,7 @@ export default function DigitalCard({ student, onFlipTo3D, onValidateModal }) {
         </div>
 
         {/* Live Holographic Security Shimmer Layer */}
-        <div className="absolute inset-0 animate-hologram pointer-events-none opacity-30"></div>
-
-        {/* Real-time Dynamic Security Pill (Anti-fraud) */}
-        <div className="relative z-10 flex items-center justify-between mb-4 pb-2.5 border-b border-slate-100">
-          <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-2.5 py-0.5 rounded-full text-[10px] font-bold border border-emerald-200/80 shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-            <span>AUTENTICADO • DNE 2026</span>
-          </div>
-
-          <div className="text-[10px] font-mono font-semibold text-slate-500 bg-slate-50 px-2 py-0.5 rounded-md border border-slate-200">
-            {liveTimestamp}
-          </div>
-        </div>
+        <div className="absolute inset-0 animate-hologram pointer-events-none opacity-25"></div>
 
         {/* Top Section: Photo (Left) + QR Code with Target Brackets (Right) */}
         <div className="relative z-10 grid grid-cols-2 gap-4 items-center">

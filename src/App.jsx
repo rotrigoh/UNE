@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
-import BannerUnlock from './components/BannerUnlock';
 import DigitalCard from './components/DigitalCard';
 import PhysicalCard3D from './components/PhysicalCard3D';
 import CadastroView from './components/CadastroView';
@@ -78,16 +77,13 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 pb-20">
+      <main className="flex-1 pb-20 pt-2">
         {activeTab === 'carteira' && (
-          <>
-            <BannerUnlock onOpenPhysicalCard={() => setActiveTab('cartao3d')} />
-            <DigitalCard 
-              student={student} 
-              onFlipTo3D={() => setActiveTab('cartao3d')}
-              onValidateModal={() => setShowValidador(true)}
-            />
-          </>
+          <DigitalCard 
+            student={student} 
+            onFlipTo3D={() => setActiveTab('cartao3d')}
+            onValidateModal={() => setShowValidador(true)}
+          />
         )}
 
         {activeTab === 'cartao3d' && (

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import QRCode from 'qrcode';
 import { DNELogo, UNELogo, UBESLogo, ANPGLogo, UFPECrest } from './Logos';
-import { RotateCw, Sparkles, CheckCircle2, Shield, Download, ArrowLeft } from 'lucide-react';
+import { RotateCw, Shield, Download, ArrowLeft } from 'lucide-react';
 
 export default function PhysicalCard3D({ student, onBack }) {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -50,24 +50,35 @@ export default function PhysicalCard3D({ student, onBack }) {
 
       {/* 3D Card Container */}
       <div 
-        className="w-full aspect-[1.586/1] perspective-1000 cursor-pointer"
+        className="w-full aspect-[1.586/1] cursor-pointer"
+        style={{ perspective: '1200px' }}
         onClick={() => setIsFlipped(!isFlipped)}
       >
         <div 
-          className={`w-full h-full relative transform-style-3d transition-transform duration-700 ease-out ${
-            isFlipped ? 'rotate-y-180' : ''
-          }`}
+          className="w-full h-full relative transition-transform duration-700 ease-in-out"
+          style={{
+            transformStyle: 'preserve-3d',
+            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+          }}
         >
           {/* ===================== FRONT OF CARD ===================== */}
-          <div className="absolute inset-0 w-full h-full backface-hidden rounded-2xl bg-white border border-slate-200 shadow-2xl p-4 flex flex-col justify-between overflow-hidden select-none">
-            {/* Background Guilloche Graphics matching the reference image */}
+          <div 
+            className={`absolute inset-0 w-full h-full rounded-2xl bg-white border border-slate-200 shadow-2xl p-4 flex flex-col justify-between overflow-hidden select-none transition-opacity duration-300 ${
+              isFlipped ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            }`}
+            style={{
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              transform: 'rotateY(0deg)',
+              transformStyle: 'preserve-3d'
+            }}
+          >
+            {/* Background Guilloche Graphics */}
             <div className="absolute inset-0 pointer-events-none opacity-40">
-              {/* Cyan / Blue Waves */}
               <svg className="absolute -bottom-10 -right-10 w-64 h-64 text-sky-500/25" viewBox="0 0 200 200" fill="none">
                 <circle cx="120" cy="120" r="90" stroke="currentColor" strokeWidth="20" />
                 <circle cx="120" cy="120" r="60" stroke="#004e89" strokeWidth="15" opacity="0.3" />
               </svg>
-              {/* Magenta / Violet Waves */}
               <svg className="absolute -bottom-14 left-1/4 w-72 h-72 text-purple-600/20" viewBox="0 0 200 200" fill="none">
                 <circle cx="100" cy="100" r="80" stroke="currentColor" strokeWidth="22" />
               </svg>
@@ -77,7 +88,7 @@ export default function PhysicalCard3D({ student, onBack }) {
             <div className="absolute inset-0 animate-hologram pointer-events-none opacity-20"></div>
 
             {/* Top Bar of Front: DNE Logo + Entity Logos */}
-            <div className="relative z-10 flex items-center justify-between">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <DNELogo className="h-6" />
               </div>
@@ -89,14 +100,14 @@ export default function PhysicalCard3D({ student, onBack }) {
             </div>
 
             {/* Student Name */}
-            <div className="relative z-10 mt-1">
+            <div className="mt-1">
               <h3 className="text-[13px] sm:text-[15px] font-black text-slate-900 tracking-tight leading-tight">
                 {student.nome}
               </h3>
             </div>
 
             {/* Middle Section: Photo (Left), Data (Center), QR Code & 2026 Graphic (Right) */}
-            <div className="relative z-10 grid grid-cols-12 gap-2.5 items-center flex-1 my-1">
+            <div className="grid grid-cols-12 gap-2.5 items-center flex-1 my-1">
               {/* Student Photo */}
               <div className="col-span-3 aspect-[3/4] rounded-lg overflow-hidden border border-slate-300 shadow-sm relative bg-slate-100">
                 <img 
@@ -146,7 +157,7 @@ export default function PhysicalCard3D({ student, onBack }) {
                   </span>
                 </div>
 
-                {/* Stylized Year 2026 (exact style from reference card) */}
+                {/* Stylized Year 2026 */}
                 <div className="relative mt-auto">
                   <span className="font-['Space_Grotesk'] text-xl sm:text-2xl font-black italic tracking-tighter bg-gradient-to-r from-[#005596] via-[#1e88e5] to-[#7b1fa2] bg-clip-text text-transparent">
                     2026
@@ -156,14 +167,24 @@ export default function PhysicalCard3D({ student, onBack }) {
             </div>
 
             {/* Bottom Bar: Validity and Security seal */}
-            <div className="relative z-10 pt-1 border-t border-slate-100 flex items-center justify-between text-[8px] text-slate-500 font-semibold">
+            <div className="pt-1 border-t border-slate-100 flex items-center justify-between text-[8px] text-slate-500 font-semibold">
               <span className="text-sky-700">Validade: {student.validade}</span>
               <span className="text-slate-400">Padrão Nacional ICP-Brasil ITI</span>
             </div>
           </div>
 
           {/* ===================== BACK OF CARD ===================== */}
-          <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 shadow-2xl p-4 flex flex-col justify-between overflow-hidden select-none">
+          <div 
+            className={`absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 shadow-2xl p-4 flex flex-col justify-between overflow-hidden select-none transition-opacity duration-300 ${
+              isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+            style={{
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              transform: 'rotateY(180deg)',
+              transformStyle: 'preserve-3d'
+            }}
+          >
             {/* Magnetic Stripe */}
             <div className="-mx-4 -mt-4 h-9 bg-slate-900 border-b border-slate-800 mb-2 flex items-center justify-end px-4">
               <span className="text-[7px] text-slate-400 font-mono tracking-widest">
